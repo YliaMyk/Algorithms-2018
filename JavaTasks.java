@@ -4,7 +4,9 @@ import com.sun.tools.javac.util.Convert;
 import kotlin.NotImplementedError;
 
 import java.io.*;
-import java.util.*;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 @SuppressWarnings("unused")
 public class JavaTasks {
@@ -99,8 +101,6 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
-    //Трудоемкость O(log(N))
-    //Ресурсоемкость O(N)
     static public void sortTemperatures(String inputName, String outputName) throws IOException {
 
         TreeMap<Double, Integer> mapTemp = new TreeMap<>();
@@ -112,7 +112,6 @@ public class JavaTasks {
                 mapTemp.merge(temp,1,(a,b) -> a + b);
             }
         }
-
         BufferedWriter output = new BufferedWriter(new FileWriter(outputName));
 
         for (Map.Entry<Double, Integer> temp: mapTemp.entrySet()){
@@ -121,7 +120,9 @@ public class JavaTasks {
             }
 
         }
-        output.close();
+
+
+
     }
 
     /**
@@ -153,47 +154,8 @@ public class JavaTasks {
      * 2
      * 2
      */
-    //Трудаемкость O(N)
-    //Ресурсоемкость O(N)
-    static public void sortSequence(String inputName, String outputName)throws IOException {
-
-        LinkedList<Integer> listNumber = new LinkedList();
-        BufferedReader inputNumber = new BufferedReader (new FileReader(inputName));
-        String line;
-        while ((line = inputNumber.readLine()) != null) {
-            int number = Integer.parseInt(line);
-            listNumber.add(number);
-        }
-
-        Map<Integer, Integer> frequency = new TreeMap<>();
-
-        for(int number: listNumber) { //создаем мап с самым часто встречающемся число
-                if(!frequency.containsKey(number))
-                    frequency.put(number, 1);
-                else
-                    frequency.put(number, frequency.get(number) + 1);
-        }
-        int maxValueInMap = ((TreeMap<Integer,Integer>)frequency).firstEntry().getValue();
-        Integer maxKeyInMap = ((TreeMap<Integer,Integer>)frequency).firstKey();
-
-        for (Map.Entry<Integer,Integer> pair: frequency.entrySet()) {
-            if(pair.getValue() > maxValueInMap) {
-                maxKeyInMap = pair.getKey();
-                maxValueInMap = pair.getValue();
-            }
-        }
-
-        BufferedWriter output = new BufferedWriter(new FileWriter(outputName));
-
-        for (Integer number: listNumber){
-                if (!maxKeyInMap.equals(number))
-                output.write(number.toString() + '\n');
-        }
-        for (int i = 0; i < maxValueInMap; i++) {
-            output.write(maxKeyInMap.toString() + '\n');
-        }
-        output.close();
-
+    static public void sortSequence(String inputName, String outputName) {
+        throw new NotImplementedError();
     }
 
     /**

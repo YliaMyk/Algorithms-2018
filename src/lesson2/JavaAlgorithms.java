@@ -3,7 +3,8 @@ package lesson2;
 import kotlin.NotImplementedError;
 import kotlin.Pair;
 
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class JavaAlgorithms {
@@ -96,8 +97,30 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
-    static public String longestCommonSubstring(String firs, String second) {
-        throw new NotImplementedError();
+    //  Трудоёмкость O(m*n)
+    //  Ресурсоёмкость O(n)
+
+     static public String longestCommonSubstring(String first, String second) throws NotImplementedError{
+        String maxMerge = "";
+        int lenFirst = first.length();
+        int lenSecond = second.length();
+        if (first == null || second == null  || lenFirst == 0 || lenSecond == 0) return maxMerge;
+        int[][] tableMerge = new int[lenFirst][lenSecond];
+        for (int i = 0; i < lenFirst; i++){
+            for (int j = 0; j < lenSecond; j++){
+                if (first.charAt(i) == second.charAt(j)) {
+                    if (i == 0 || j == 0) {
+                        tableMerge[i][j] = 1;
+                    } else {
+                        tableMerge[i][j] = tableMerge[i - 1][j - 1] + 1;
+                    }
+                    if (maxMerge.length()< tableMerge[i][j]) {
+                        maxMerge = first.substring(i - tableMerge[i][j] + 1, i + 1);
+                    }
+                }
+            }
+        }
+        return maxMerge;
     }
 
     /**
@@ -110,8 +133,32 @@ public class JavaAlgorithms {
      * Справка: простым считается число, которое делится нацело только на 1 и на себя.
      * Единица простым числом не считается.
      */
-    static public int calcPrimesNumber(int limit) {
-        throw new NotImplementedError();
+    // Трудоемкость O(N^2)
+    // Ресурсоемкость O(N)
+    static public int calcPrimesNumber(int limit) throws  NotImplementedError{
+        Integer numberOfIntegers = 0;
+        int num = 0;
+        LinkedList<Integer> numSet = new LinkedList<>();
+        if (limit < 2) return numberOfIntegers;
+        if (limit % 2 == 0) {
+            numberOfIntegers++;
+        }
+        numSet.add(2);
+        for ( int i = 3; i <= limit; i += 2) {
+            numSet.add(i);
+        }
+        ListIterator<Integer> it = numSet.listIterator();
+        while (it.hasNext()) {
+            int n = it.next();
+            int index = it.nextIndex();
+            while (it.hasNext()) {
+                if (it.next() % n == 0) {
+                    it.remove();
+                }
+            }
+            it = numSet.listIterator(index);
+        }
+        return numSet.size();
     }
 
     /**

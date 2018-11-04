@@ -2,6 +2,7 @@ package lesson1
 
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Tag
+import java.io.File
 import kotlin.test.Test
 
 class TaskTestsJava : AbstractTaskTests() {
@@ -22,6 +23,10 @@ class TaskTestsJava : AbstractTaskTests() {
     @Tag("Normal")
     fun testSortTemperatures() {
         sortTemperatures { inputName, outputName -> JavaTasks.sortTemperatures(inputName, outputName) }
+        JavaTasks.sortTemperatures("input/null.txt", "output.txt")
+        assertFileContent("output.txt", "")
+        File("output.txt").delete()
+
     }
 
     @Test
@@ -48,5 +53,8 @@ class TaskTestsJava : AbstractTaskTests() {
             JavaTasks.mergeArrays<Int>(first, second)
             assertArrayEquals(expectedResult, second)
         }
+
+
     }
+
 }
