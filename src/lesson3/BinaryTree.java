@@ -11,7 +11,7 @@ import java.util.*;
 public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implements CheckableSortedSet<T> {
 
     private static class Node<T> {
-        final T value;
+        T value;
 
         Node<T> left = null;
 
@@ -27,7 +27,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     private int size = 0;
 
     @Override
-    public boolean add(T t) {
+    public boolean add(T t) { //добавить эллемент
         Node<T> closest = find(t);
         int comparison = closest == null ? -1 : t.compareTo(closest.value);
         if (comparison == 0) {
@@ -64,10 +64,36 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      * Удаление элемента в дереве
      * Средняя
      */
-    @Override
-    public boolean remove(Object o) {
-        // TODO
-        throw new NotImplementedError();
+    //Ресурсоёмкость O(1)
+    //Трудоёмкость O(n)
+
+    public boolean remove(T t) {
+        if (root != null && contains(t)) {
+            removeElement(root, t);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private Node<T> removeElement(Node<T> start, T t) {
+        Node<T> temp = start;
+        if (temp == null) {
+            return root;
+        }
+        if (temp.value.compareTo(t) > 0) {
+            temp.left = removeElement(root.left,t);
+        } else if (temp.value.compareTo(t) < 0) {
+            temp.right = removeElement(temp.right, t);
+        } else if (temp.left != null && temp.right != null) {
+            temp.value = minimal(temp.right).value;
+            temp.right = removeElement(temp.right, temp.value);
+        } else if (temp.left != null) {
+            temp = root.left;
+        } else {
+            temp = root.right;
+        }
+        return temp;
     }
 
     @Override
@@ -108,9 +134,23 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          * Поиск следующего элемента
          * Средняя
          */
-        private Node<T> findNext() {
-            // TODO
-            throw new NotImplementedError();
+        //Ресурсоёмкость O(n)
+        //Трудоёмкость O(1)
+
+        private Node<T> findNext() throws NotImplementedError{
+            if (current == null) return minimal(root);
+            Node<T> temp = root;
+            Node<T> successor = null;
+            while (temp != null){
+                if (temp.value.compareTo(current.value) > 0) {
+                    successor = temp;
+                    temp = temp.left;
+                    }
+                else {
+                    temp = temp.right;
+                }
+            }
+            return successor;
         }
 
         @Override
@@ -129,11 +169,19 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          * Удаление следующего элемента
          * Сложная
          */
-        @Override
+        //Ресурсоёмкость O(1)
+        //Трудоёмкость O(n)
         public void remove() {
             // TODO
             throw new NotImplementedError();
         }
+    }
+
+    private Node<T> minimal(Node<T> root) {
+        if (root.left != null) {
+            return minimal(root.left);
+        }
+        return root;
     }
 
     @NotNull
