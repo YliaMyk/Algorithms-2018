@@ -60,6 +60,8 @@ public class JavaDynamicTasks {
      *
      * Здесь ответ 2 + 3 + 4 + 1 + 2 = 12
      */
+    //Ресурсоемкость = O(N)
+    //Трудоемкость = O(N^2)
     public static int shortestPathOnField(String inputName) throws IOException {
         List<String> lines = Files.readAllLines(Paths.get(inputName));
         int height = lines.size();
