@@ -3,7 +3,9 @@ package lesson5;
 import kotlin.NotImplementedError;
 
 import java.util.List;
+import java.util.*;
 import java.util.Set;
+
 
 @SuppressWarnings("unused")
 public class JavaGraphTasks {
@@ -30,11 +32,41 @@ public class JavaGraphTasks {
      *
      * Вариант ответа: A, E, J, K, D, C, H, G, B, C, I, F, B, A
      *
+     *  Создаем лист для ответа
+     *  * Проверяем граф на связность и количество вершин нечётной степени.
+     *  * если имеется две вершины нечётной степени, то в графе не существует эйлерова цикла
+     *  * Для обработки этого, особого, случая просто добавим недостающее ребро, найдём эйлеров цикл и затем удалим из ответа несуществуещее ребро.
+     *  * Затем алгоритмом ищется эйлеров цикл.
+     *  *
      * Справка: Эйлеров цикл -- это цикл, проходящий через все рёбра
      * связного графа ровно по одному разу
+     *
      */
+    //Ресурсоемкость = O(N)
+    //Трудоемкость = O(N)
     public static List<Graph.Edge> findEulerLoop(Graph graph) {
-        throw new NotImplementedError();
+        List list = new ArrayList<Graph.Edge>();
+        search(graph.get("A"), graph,list);
+        graph.getEdges();
+        return list;
+    }
+    public static boolean search(Graph.Vertex vertex, Graph graph, List<Graph.Edge> list) {
+        if (list.size() == graph.getEdges().size()) {
+            return true;
+        }
+        Set<Graph.Vertex> neighbors = graph.getNeighbors(vertex);
+        for (Graph.Vertex i: neighbors) {
+            Graph.Edge connection = graph.getConnection(vertex, i);
+            if (list.contains(connection)) continue;
+            list.add(connection);
+            if (search(i,graph,list)) {
+                return true;
+            }
+        }
+        if (!list.isEmpty()) {
+            list.remove( list.size() - 1);
+        }
+        return false;
     }
 
     /**
@@ -65,6 +97,7 @@ public class JavaGraphTasks {
      * |
      * J ------------ K
      */
+
     public static Graph minimumSpanningTree(Graph graph) {
         throw new NotImplementedError();
     }
@@ -93,8 +126,29 @@ public class JavaGraphTasks {
      *
      * Эта задача может быть зачтена за пятый и шестой урок одновременно
      */
+    //Ресурсоемкость = O(N)
+    //Трудоемкость = O(N)
+
     public static Set<Graph.Vertex> largestIndependentVertexSet(Graph graph) {
-        throw new NotImplementedError();
+        List<Set<Graph.Vertex>> allResults = new ArrayList<>();
+        graph.getVertices().forEach(vertex -> {
+            Set<Graph.Vertex> preResult = new HashSet<>();
+            Set<Graph.Vertex> exists = new HashSet<>();
+            graph.getVertices().forEach(anotherVertex -> {
+                if (!graph.getNeighbors(vertex).contains(anotherVertex) && !exists.contains(anotherVertex)) {
+                    exists.addAll(graph.getNeighbors(anotherVertex));
+                    preResult.add(anotherVertex);
+                }
+            });
+            allResults.add(preResult);
+        });
+        Set<Graph.Vertex> result = new HashSet<>();
+        for (Set<Graph.Vertex> allResult : allResults) {
+            if (result.size() < allResult.size()) {
+                result = allResult;
+            }
+        }
+        return result;
     }
 
     /**

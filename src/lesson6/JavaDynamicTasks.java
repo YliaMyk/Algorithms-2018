@@ -2,8 +2,11 @@ package lesson6;
 
 import kotlin.NotImplementedError;
 
-import java.util.List;
-
+import  java.util.*;
+import  java.io.IOException;
+import  java.nio.file.Files;
+import  java.nio.file.Paths;
+import static java.lang.Integer.min;
 @SuppressWarnings("unused")
 public class JavaDynamicTasks {
     /**
@@ -57,8 +60,32 @@ public class JavaDynamicTasks {
      *
      * Здесь ответ 2 + 3 + 4 + 1 + 2 = 12
      */
-    public static int shortestPathOnField(String inputName) {
-        throw new NotImplementedError();
+    public static int shortestPathOnField(String inputName) throws IOException {
+        List<String> lines = Files.readAllLines(Paths.get(inputName));
+        int height = lines.size();
+        int width = lines.get(0).split("\\s+").length;
+        List<int[]> list = new ArrayList<>();
+        for (String line : lines) {
+            int[] ints = new int[10];
+            int count = 0;
+            for (String s : line.split("\\s+")) {
+                int i = Integer.parseInt(s);
+                if (ints.length == count) ints = Arrays.copyOf(ints, count * 2);
+                ints[count++] = i;
+            }
+            ints = Arrays.copyOfRange(ints, 0, count);
+            list.add(ints);
+        }
+        int[][] field = list.toArray(new int[0][]);
+        for (int i = 1; i < height; i++) field[i][0] = field[i - 1][0] + field[i][0];
+        for (int i = 1; i < width; i++) field[0][i] = field[0][i - 1] + field[0][i];
+        for (int y = 1; y < height; y++) {
+            for (int x = 1; x < width; x++) {
+                int minimal = min(Math.min(field[y - 1][x], field[y][x - 1]), field[y - 1][x - 1]);
+                field[y][x] += minimal;
+            }
+        }
+        return field[height - 1][width - 1];
     }
 
     // Задачу "Максимальное независимое множество вершин в графе без циклов"
